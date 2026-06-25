@@ -820,7 +820,7 @@ function AdminPage({vols,booths,msgs,tags,adminOk,setAdminOk,adminTab,setAdminTa
   );
   const tabs=[{id:"dashboard",label:"ダッシュボード"},{id:"vols",label:`ボランティア (${vols.length})`},{id:"booths",label:`出店申込 (${booths.length})`},{id:"bulk",label:"一括連絡"},{id:"tagmgmt",label:"🏷 タグ管理"}];
   return(
-    <div style={{background:"var(--off)",minHeight:"calc(100vh - 56px)"}}>
+    <div style={{background:"var(--off)",minHeight:"calc(100vh - 56px)",paddingTop:"56px"}}>
       <div className="admin-wrap">
         {loading&&<div className="loading"><span className="spin" style={{fontSize:24}}>⟳</span><br/>Notionから読み込み中...</div>}
         {!loading&&<>
