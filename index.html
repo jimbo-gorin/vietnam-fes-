@@ -690,7 +690,7 @@ function VolForm({addVol,notify}){
   const submit=async()=>{
     if(!form.name||!form.email||!form.role||!form.shift||!form.age){setErr("必須項目（*）をすべて入力してください");return;}
     if(parseInt(form.age)<18){setErr("応募資格は18歳以上です");return;}
-    if(form.pr.length<100){setErr(`自己PR文は100文字以上必要です（現在${form.pr.length}文字）`);return;}
+    
     setSending(true);setErr("");
     try{await addVol(form);setDone(true);notify("応募を受け付けました！担当者よりご連絡します");}
     catch(e){setErr("送信に失敗しました。しばらくしてから再試行してください。");}
@@ -712,7 +712,7 @@ function VolForm({addVol,notify}){
         <div className="req-items">
           <span>✓ 18歳以上（国籍不問）</span>
           <span>✓ ベトナム語・英語話せる方優先</span>
-          <span>✓ 自己PR文100文字以上</span>
+          <span>✓ 自己PRは任意記入</span>
         </div>
       </div>
       {err&&<div className="form-error">{err}</div>}
@@ -724,7 +724,7 @@ function VolForm({addVol,notify}){
         <FS label="希望役割 *" value={form.role} onChange={v=>set("role",v)} opts={VOL_ROLES.map(r=>({v:r.id,l:r.label}))}/>
         <FS label="参加可能日 *" value={form.shift} onChange={v=>set("shift",v)} opts={VOL_SHIFTS.map(s=>({v:s,l:s}))}/>
         <div className="field-full"><FS label="語学スキル" value={form.lang} onChange={v=>set("lang",v)} opts={VOL_LANGS.map(s=>({v:s,l:s}))}/></div>
-        <div className="field-full"><FT label={`自己PR * （100文字以上・現在${form.pr.length}文字）`} value={form.pr} onChange={v=>set("pr",v)} ph="ベトナム文化に興味を持ったきっかけ、経験、意気込みなどをご記入ください"/></div>
+        <div className="field-full"><FT label={"自己PR（任意）"} value={form.pr} onChange={v=>set("pr",v)} ph="ベトナム文化に興味を持ったきっかけ、経験、意気込みなどをご記入ください"/></div>
         <div className="field-full"><FT label="その他・質問（任意）" value={form.note} onChange={v=>set("note",v)} ph="ご質問等があればご記載ください"/></div>
       </div>
       <button className="submit-btn" onClick={submit} disabled={sending}>
