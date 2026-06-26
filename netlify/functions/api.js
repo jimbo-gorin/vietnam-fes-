@@ -9,10 +9,12 @@ const CORS = {
 exports.handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') return { statusCode: 200, headers: CORS, body: '' };
 
-  const TOKEN     = process.env.NOTION_TOKEN;
-  const VOL_DB    = process.env.VOL_DB_ID;
-  const BOOTH_DB  = process.env.BOOTH_DB_ID;
-  const PARENT_ID = process.env.PARENT_PAGE_ID || '38a4e3b8cb628005be35dab63d65ad47';
+  const TOKEN      = process.env.NOTION_TOKEN;
+  const VOL_DB     = process.env.VOL_DB_ID;
+  const BOOTH_DB   = process.env.BOOTH_DB_ID;
+  const PARENT_ID  = process.env.PARENT_PAGE_ID || '38a4e3b8cb628005be35dab63d65ad47';
+  const SLACK_TOKEN   = process.env.SLACK_TOKEN;
+  const SLACK_CHANNEL = process.env.SLACK_CHANNEL || 'C0BDF2B92GZ';
 
   const notion = async (method, endpoint, body) => {
     const r = await fetch(`https://api.notion.com/v1${endpoint}`, {
@@ -23,6 +25,24 @@ exports.handler = async (event) => {
         'Notion-Version': '2022-06-28',
       },
       body: body ? JSON.stringify(body) : undefined,
+    });
+    return r.json();
+  };
+
+  const slack = async (text, channel) => {
+    if (!SLACK_TOKEN) return { ok: false, error: 'No SLACK_TOKEN' };
+    const r = await fetch('https://slack.com/api/chat.postMessage', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${SLACK_TOKEN}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        channel: channel || SLACK_CHANNEL,
+        text,
+        username: 'ベトフェス2026',
+        icon_emoji: ':vietnam:',
+      }),
     });
     return r.json();
   };
@@ -53,16 +73,16 @@ exports.handler = async (event) => {
             { name: '企画・運営サポート', color: 'orange' },
           ]}},
           '参加日': { select: { options: [
-            { name: '12月12日（土）9:00〜21:00',    color: 'yellow' },
-            { name: '12月13日（日）9:00〜21:00',    color: 'pink' },
+            { name: '12月12日（土）9:00〜21:00',         color: 'yellow' },
+            { name: '12月13日（日）9:00〜21:00',         color: 'pink' },
             { name: '両日参加（12日・13日）9:00〜21:00', color: 'red' },
           ]}},
           '語学スキル': { select: { options: [
-            { name: '日本語のみ',              color: 'gray' },
-            { name: '日本語・英語',            color: 'blue' },
-            { name: '日本語・ベトナム語',      color: 'red' },
+            { name: '日本語のみ',               color: 'gray' },
+            { name: '日本語・英語',             color: 'blue' },
+            { name: '日本語・ベトナム語',       color: 'red' },
             { name: '日本語・英語・ベトナム語', color: 'purple' },
-            { name: 'その他（備考に記載）',    color: 'default' },
+            { name: 'その他（備考に記載）',     color: 'default' },
           ]}},
           '自己PR':     { rich_text: {} },
           '備考':       { rich_text: {} },
@@ -121,7 +141,12 @@ exports.handler = async (event) => {
       if (volDB.object === 'error' || boothDB.object === 'error') {
         return res(500, { error: 'データベース作成失敗', volError: volDB.message, boothError: boothDB.message });
       }
-      return res(200, { success: true, VOL_DB_ID: volDB.id, BOOTH_DB_ID: boothDB.id, message: '✅ データベースを作成しました。上記2つのIDをNetlify環境変数に設定してください。' });
+      return res(200, {
+        success: true,
+        VOL_DB_ID: volDB.id,
+        BOOTH_DB_ID: boothDB.id,
+        message: '✅ データベースを作成しました。上記2つのIDをNetlify環境変数に設定してください。',
+      });
     }
 
     // ── FETCH ─────────────────────────────────────────────────
@@ -148,12 +173,18 @@ exports.handler = async (event) => {
       const properties = type === 'booth' ? boothToNotion(data) : volToNotion(data);
       const page = await notion('POST', '/pages', { parent: { database_id: dbId }, properties });
       if (page.object === 'error') return res(500, { error: page.message });
+
+      // Slack通知（新規応募）
+      const typeLabel = type === 'booth' ? '🏪 出店申込' : '🙋 ボランティア応募';
+      const name = type === 'booth' ? (data.company || data.name) : data.name;
+      await slack(`${typeLabel}が届きました！\n*名前:* ${name}\n*メール:* ${data.email}\n管理画面で確認してください。`);
+
       return res(200, { entry: mapFromNotion(page, type) });
     }
 
     // ── UPDATE ────────────────────────────────────────────────
     if (action === 'update') {
-      const { pageId, status, tags, type } = body;
+      const { pageId, status, tags, type, name } = body;
       const statusLabel = type === 'booth'
         ? { pending:'確認中', confirmed:'承認', waitlist:'補欠', rejected:'不採用' }[status]
         : { pending:'審査中', confirmed:'確定', waitlist:'補欠', rejected:'不採用' }[status];
@@ -164,6 +195,22 @@ exports.handler = async (event) => {
 
       const result = await notion('PATCH', `/pages/${pageId}`, { properties });
       if (result.object === 'error') return res(500, { error: result.message });
+
+      // 確定・承認時にSlack通知
+      if (status === 'confirmed' && name) {
+        const label = type === 'booth' ? '出店承認' : '参加確定';
+        await slack(`✅ *${label}* しました\n*対象:* ${name}`);
+      }
+
+      return res(200, { success: true });
+    }
+
+    // ── SLACK送信 ─────────────────────────────────────────────
+    if (action === 'slack') {
+      const { text, channel } = body;
+      if (!text) return res(400, { error: 'text is required' });
+      const result = await slack(text, channel);
+      if (!result.ok) return res(500, { error: result.error });
       return res(200, { success: true });
     }
 
