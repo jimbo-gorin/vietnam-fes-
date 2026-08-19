@@ -371,10 +371,10 @@ const VOL_ROLES=[
 const VOL_SHIFTS=["12月12日（土）9:00〜21:00","12月13日（日）9:00〜21:00","両日参加（12日・13日）9:00〜21:00"];
 const VOL_LANGS=["日本語のみ","日本語・英語","日本語・ベトナム語","日本語・英語・ベトナム語","その他（備考に記載）"];
 const BOOTH_CATS=[
-  {id:"food",   icon:"🍜",label:"飲食ブース",       price:300000,slots:25,desc:"テント3.6m×2.7m／シンク+手洗い／電源1.5kW"},
-  {id:"truck",  icon:"🚐",label:"キッチンカー",     price:250000,slots:5, desc:"車両スペース／電源1.5kW（営業許可書必須）"},
-  {id:"goods",  icon:"🛒",label:"食材系・物販",     price:250000,slots:15,desc:"テント3.6m×2.7m／机2台・椅子2脚／電源1.0kW"},
-  {id:"exhibit",icon:"🏢",label:"展示・PRブース",   price:220000,slots:5, desc:"テント3.6m×2.7m／机2台・椅子2脚（物販不可）"},
+  {id:"food",   icon:"🍜",label:"飲食ブース",       price:335000,slots:25,desc:"テント3.6m×3.6m／机2台・椅子2脚／電源1.5kW／水タンク・バケツ／LED灯／消火器"},
+  {id:"truck",  icon:"🚐",label:"キッチンカー",     price:280000,slots:5, desc:"車両1台分スペース／電源1.5kW（営業許可書必須）"},
+  {id:"goods",  icon:"🛒",label:"物販・食材物販",   price:270000,slots:15,desc:"テント3.6m×2.7m／机2台・椅子2脚／電源1.0kW／蛍光灯"},
+  {id:"exhibit",icon:"🏢",label:"展示・PRブース",   price:240000,slots:15,desc:"テント3.6m×2.7m／机2台・椅子2脚／電源1.0kW／蛍光灯（物販不可）"},
 ];
 const V_STATUS={
   pending:  {label:"審査中",c:"#D97706",bg:"rgba(217,119,6,0.1)"},
@@ -636,7 +636,7 @@ function PublicPage({vols,booths,addVol,addBooth,notify}){
         <div className="section-inner">
           <div className="section-label">Booth</div>
           <h2 className="section-title">出店者<span>募集中</span></h2>
-          <p className="section-desc">ベトナムに関する飲食・物販・企業PRブースを募集しています。締切：2026年8月28日（金）</p>
+          <p className="section-desc">ベトナムに関する飲食・物販・企業PRブースを募集しています。申込締切：2026年10月30日（金）</p>
           <div className="booth-grid">
             {BOOTH_CATS.map(c=>{
               const rem=boothRem(c.id);const full=rem<=0;
@@ -676,7 +676,7 @@ function PublicPage({vols,booths,addVol,addBooth,notify}){
         <div className="footer-info">
           2026年12月12日（土）・13日（日）　金城ふ頭 Lives NAGOYA<br/>
           主催：ベトナムフェスティバル2026名古屋実行委員会<br/>
-          お問合せ：info@vietnamfes.net
+          お問合せ：vfnagoya@vietnamfes.net
         </div>
       </footer>
     </div>
@@ -758,7 +758,7 @@ function BoothForm({addBooth,notify}){
     <div className="form-box">
       <div className="form-box-title">出店ブース申込フォーム</div>
       <div style={{color:"rgba(255,255,255,0.4)",fontSize:12,marginBottom:20,padding:"10px 14px",background:"rgba(255,205,0,0.06)",borderRadius:6,border:"1px solid rgba(255,205,0,0.15)"}}>
-        📌 申込締切：<strong style={{color:"#FFCD00"}}>2026年8月28日（金）</strong>　お問合せ：info@vietnamfes.net
+        📌 申込締切：<strong style={{color:"#FFCD00"}}>2026年10月30日（金）</strong>　お問合せ：vfnagoya@vietnamfes.net
       </div>
       {err&&<div className="form-error">{err}</div>}
       <div className="field-grid">
