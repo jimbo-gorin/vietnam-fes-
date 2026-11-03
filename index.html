@@ -737,7 +737,7 @@ function VolForm({addVol,notify}){
 }
 
 function BoothForm({addBooth,notify}){
-  const [form,setForm]=useState({company:"",shopname:"",name:"",email:"",phone:"",cat:"",content:"",note:""});
+  const [form,setForm]=useState({company:"",shopname:"",name:"",email:"",phone:"",address:"",cat:"",quantity:"1",content:"",note:""});
   const [done,setDone]=useState(false);const [err,setErr]=useState("");const [sending,setSending]=useState(false);
   const set=(k,v)=>setForm(f=>({...f,[k]:v}));
   const submit=async()=>{
@@ -752,7 +752,7 @@ function BoothForm({addBooth,notify}){
       <div className="done-icon">🏪</div>
       <div className="done-title">申込完了！</div>
       <div className="done-desc">お申込みありがとうございます。<br/>担当者より折り返しご連絡いたします。</div>
-      <button onClick={()=>{setDone(false);setForm({company:"",shopname:"",name:"",email:"",phone:"",cat:"",content:"",note:""});}} style={{marginTop:20,background:"transparent",border:"1px solid rgba(255,255,255,0.2)",color:"rgba(255,255,255,0.6)",padding:"8px 20px",borderRadius:6,cursor:"pointer",fontSize:13}}>続けて申し込む</button>
+      <button onClick={()=>{setDone(false);setForm({company:"",shopname:"",name:"",email:"",phone:"",address:"",cat:"",quantity:"1",content:"",note:""});}} style={{marginTop:20,background:"transparent",border:"1px solid rgba(255,255,255,0.2)",color:"rgba(255,255,255,0.6)",padding:"8px 20px",borderRadius:6,cursor:"pointer",fontSize:13}}>続けて申し込む</button>
     </div>
   );
   return(
@@ -768,7 +768,9 @@ function BoothForm({addBooth,notify}){
         <FF label="ご担当者名 *" value={form.name} onChange={v=>set("name",v)} ph="山田 太郎"/>
         <FF label="携帯番号 *" value={form.phone} onChange={v=>set("phone",v)} ph="090-0000-0000"/>
         <div className="field-full"><FF label="メールアドレス *" value={form.email} onChange={v=>set("email",v)} ph="email@example.com" type="email"/></div>
+        <div className="field-full"><FF label="住所 *" value={form.address} onChange={v=>set("address",v)} ph="〒000-0000 愛知県名古屋市○○区○○町0-0-0"/></div>
         <div className="field-full"><FS label="出店カテゴリ *" value={form.cat} onChange={v=>set("cat",v)} opts={BOOTH_CATS.map(c=>({v:c.id,l:`${c.label}（¥${c.price.toLocaleString()}）`}))}/></div>
+        <FS label="希望ブース数 *" value={form.quantity} onChange={v=>set("quantity",v)} opts={[{v:"1",l:"1ブース"},{v:"2",l:"2ブース"},{v:"3",l:"3ブース"},{v:"4",l:"4ブース"},{v:"5",l:"5ブース"}]}/>
         <div className="field-full"><FT label="出店内容・販売予定商品" value={form.content} onChange={v=>set("content",v)} ph="例：ベトナム料理（フォー・バインミー・生春巻き）の販売"/></div>
         <div className="field-full"><FT label="備考・質問（任意）" value={form.note} onChange={v=>set("note",v)} ph="設備に関する質問など"/></div>
       </div>
