@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Vietnam Festival 2026 名古屋</title>
+<title>Vietnam Festival 2027 名古屋</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
@@ -371,10 +371,11 @@ const VOL_ROLES=[
 const VOL_SHIFTS=["12月12日（土）9:00〜21:00","12月13日（日）9:00〜21:00","両日参加（12日・13日）9:00〜21:00"];
 const VOL_LANGS=["日本語のみ","日本語・英語","日本語・ベトナム語","日本語・英語・ベトナム語","その他（備考に記載）"];
 const BOOTH_CATS=[
-  {id:"food",   icon:"🍜",label:"飲食ブース",       price:335000,slots:25,desc:"テント3.6m×3.6m／机2台・椅子2脚／電源1.5kW／水タンク・バケツ／LED灯／消火器"},
-  {id:"truck",  icon:"🚐",label:"キッチンカー",     price:280000,slots:5, desc:"車両1台分スペース／電源1.5kW（営業許可書必須）"},
-  {id:"goods",  icon:"🛒",label:"物販・食材物販",   price:270000,slots:15,desc:"テント3.6m×2.7m／机2台・椅子2脚／電源1.0kW／蛍光灯"},
-  {id:"exhibit",icon:"🏢",label:"展示・PRブース",   price:240000,slots:15,desc:"テント3.6m×2.7m／机2台・椅子2脚／電源1.0kW／蛍光灯（物販不可）"},
+  {id:"food",   icon:"🍜",label:"飲食ブース",       price:330000,slots:15,desc:"テント3.6m×3.6m／机2台・椅子2脚／電源1.5kW／水タンク・バケツ／LED灯／消火器（保健所申請手数料含む）"},
+  {id:"truck",  icon:"🚐",label:"キッチンカー",     price:280000,slots:5, desc:"車両1台分スペース／電源1.5kW（愛知県または名古屋市の営業許可書必須）"},
+  {id:"goods",  icon:"🛒",label:"物販・食材物販",   price:270000,slots:15,desc:"テント3.6m×3.6m／机2台・椅子2脚／電源1.0kW／蛍光灯（食材物販は保健所申請手数料含む）"},
+  {id:"exhibit",icon:"🏢",label:"展示・PRブース",   price:240000,slots:5, desc:"テント3.6m×3.6m／机2台・椅子2脚／電源1.0kW／蛍光灯（物販・契約行為不可）"},
+  {id:"exhibit_half",icon:"🏛️",label:"展示・PR半ブース",price:100000,slots:6,desc:"テント3.6m×1.8m／机1台・椅子1脚／電源1.0kW／蛍光灯（物販・契約行為不可）"},
 ];
 const V_STATUS={
   pending:  {label:"審査中",c:"#D97706",bg:"rgba(217,119,6,0.1)"},
@@ -396,10 +397,10 @@ const DEFAULT_TAGS=[
 ];
 const TEMPLATES=[
   {label:"参加確定",text:"ボランティアへのご応募ありがとうございます。審査の結果、参加が確定しました。詳細は追ってご連絡いたします。"},
-  {label:"出店承認",text:"Vietnam Festival 2026名古屋へのご出店申込をいただきありがとうございます。ご出店を承認いたしました。請求書を別途お送りいたします。"},
+  {label:"出店承認",text:"VIETNAM DAY ベトナムフェスティバル2027名古屋へのご出店申込をいただきありがとうございます。ご出店を承認いたしました。請求書を別途お送りいたします。"},
   {label:"補欠通知",text:"ご応募ありがとうございます。現在補欠となっておりますが、キャンセルが発生した場合は改めてご連絡いたします。"},
   {label:"集合案内",text:"【集合案内】当日は10:00に金城ふ頭Lives NAGOYA入口にお集まりください。動きやすい服装でお越しください。"},
-  {label:"終了お礼",text:"本日はVietnam Festival 2026にご協力いただきありがとうございました。皆様のおかげで素晴らしいイベントになりました！"},
+  {label:"終了お礼",text:"本日はVIETNAM DAY ベトナムフェスティバル2027名古屋にご協力いただきありがとうございました。皆様のおかげで素晴らしいイベントになりました！"},
 ];
 const lstore={
   get:(k)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):null;}catch{return null;}},
@@ -408,7 +409,7 @@ const lstore={
 
 // ─── Countdown ────────────────────────────────────────────────
 function Countdown(){
-  const target=new Date("2026-12-12T10:00:00+09:00");
+  const target=new Date("2027-04-03T10:00:00+09:00");
   const calc=()=>{
     const diff=target-new Date();
     if(diff<=0)return{d:0,h:0,m:0,s:0};
@@ -547,7 +548,7 @@ function App(){
         <div className="nav-logo">
           <span className="nav-logo-flag">🇻🇳</span>
           <span className="nav-logo-text">VIETNAM FESTIVAL</span>
-          <span className="nav-logo-sub">2026 名古屋</span>
+          <span className="nav-logo-sub">2027 名古屋</span>
         </div>
         <div style={{display:"flex",gap:8,alignItems:"center"}}>
           {view==="admin"&&adminOk&&<button onClick={loadData} style={{background:"transparent",border:"1px solid rgba(255,255,255,0.2)",color:"rgba(255,255,255,0.6)",padding:"5px 10px",borderRadius:4,fontSize:11,cursor:"pointer"}}>🔄 更新</button>}
@@ -578,14 +579,14 @@ function PublicPage({vols,booths,addVol,addBooth,notify}){
         <div className="hero-overlay"/>
         <div className="hero-stars"/>
         <div className="hero-content">
-          <div className="hero-badge">Staff & Booth Recruitment 2026</div>
+          <div className="hero-badge">Staff & Booth Recruitment 2027</div>
           <div className="hero-flag">🇻🇳</div>
           <h1 className="hero-title">
             VIETNAM<br/><span>FESTIVAL</span><br/>名古屋
           </h1>
           <p className="hero-sub">ベトナムの「いま」を名古屋から伝える</p>
           <div className="hero-info">
-            <div className="hero-info-item"><strong>📅</strong> 2026年12月12日（土）・13日（日）</div>
+            <div className="hero-info-item"><strong>📅</strong> 2027年4月3日（土）・4日（日）</div>
             <div className="hero-info-item"><strong>📍</strong> 金城ふ頭 Lives NAGOYA</div>
             <div className="hero-info-item"><strong>👥</strong> 来場予想 3万人</div>
           </div>
@@ -636,7 +637,7 @@ function PublicPage({vols,booths,addVol,addBooth,notify}){
         <div className="section-inner">
           <div className="section-label">Booth</div>
           <h2 className="section-title">出店者<span>募集中</span></h2>
-          <p className="section-desc">ベトナムに関する飲食・物販・企業PRブースを募集しています。申込締切：2026年10月30日（金）</p>
+          <p className="section-desc">ベトナムに関する飲食・物販・企業PRブースを募集しています。申込締切：2027年1月31日（日）</p>
           <div className="booth-grid">
             {BOOTH_CATS.map(c=>{
               const rem=boothRem(c.id);const full=rem<=0;
@@ -672,10 +673,10 @@ function PublicPage({vols,booths,addVol,addBooth,notify}){
       {/* FOOTER */}
       <footer className="footer">
         <div className="footer-flag">🇻🇳</div>
-        <div className="footer-name">VIETNAM FESTIVAL 2026 NAGOYA</div>
+        <div className="footer-name">VIETNAM FESTIVAL 2027 NAGOYA</div>
         <div className="footer-info">
-          2026年12月12日（土）・13日（日）　金城ふ頭 Lives NAGOYA<br/>
-          主催：ベトナムフェスティバル2026名古屋実行委員会<br/>
+          2027年4月3日（土）・4日（日）　金城ふ頭 Lives NAGOYA<br/>
+          主催：VIETNAM DAY ベトナムフェスティバル2027名古屋実行委員会<br/>
           お問合せ：vfnagoya@vietnamfes.net
         </div>
       </footer>
@@ -758,7 +759,7 @@ function BoothForm({addBooth,notify}){
     <div className="form-box">
       <div className="form-box-title">出店ブース申込フォーム</div>
       <div style={{color:"rgba(255,255,255,0.4)",fontSize:12,marginBottom:20,padding:"10px 14px",background:"rgba(255,205,0,0.06)",borderRadius:6,border:"1px solid rgba(255,205,0,0.15)"}}>
-        📌 申込締切：<strong style={{color:"#FFCD00"}}>2026年10月30日（金）</strong>　お問合せ：vfnagoya@vietnamfes.net
+        📌 申込締切：<strong style={{color:"#FFCD00"}}>2027年1月31日（日）</strong>　お問合せ：vf26@vietnamfes.net
       </div>
       {err&&<div className="form-error">{err}</div>}
       <div className="field-grid">
