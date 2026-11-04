@@ -677,7 +677,7 @@ function PublicPage({vols,booths,addVol,addBooth,notify}){
         <div className="footer-info">
           2027年4月3日（土）・4日（日）　金城ふ頭 Lives NAGOYA<br/>
           主催：VIETNAM DAY ベトナムフェスティバル2027名古屋実行委員会<br/>
-          お問合せ：vfnagoya@vietnamfes.net
+          お問合せ：info-nagoya@vietnamfes.net
         </div>
       </footer>
     </div>
@@ -759,7 +759,7 @@ function BoothForm({addBooth,notify}){
     <div className="form-box">
       <div className="form-box-title">出店ブース申込フォーム</div>
       <div style={{color:"rgba(255,255,255,0.4)",fontSize:12,marginBottom:20,padding:"10px 14px",background:"rgba(255,205,0,0.06)",borderRadius:6,border:"1px solid rgba(255,205,0,0.15)"}}>
-        📌 申込締切：<strong style={{color:"#FFCD00"}}>2027年1月31日（日）</strong>　お問合せ：vf26@vietnamfes.net
+        📌 申込締切：<strong style={{color:"#FFCD00"}}>2027年1月31日（日）</strong>　お問合せ：info-nagoya@vietnamfes.net
       </div>
       {err&&<div className="form-error">{err}</div>}
       <div className="field-grid">
@@ -771,7 +771,7 @@ function BoothForm({addBooth,notify}){
         <div className="field-full"><FF label="住所 *" value={form.address} onChange={v=>set("address",v)} ph="〒000-0000 愛知県名古屋市○○区○○町0-0-0"/></div>
         <div className="field-full"><FS label="出店カテゴリ *" value={form.cat} onChange={v=>set("cat",v)} opts={BOOTH_CATS.map(c=>({v:c.id,l:`${c.label}（¥${c.price.toLocaleString()}）`}))}/></div>
         <FS label="希望ブース数 *" value={form.quantity} onChange={v=>set("quantity",v)} opts={[{v:"1",l:"1ブース"},{v:"2",l:"2ブース"},{v:"3",l:"3ブース"},{v:"4",l:"4ブース"},{v:"5",l:"5ブース"}]}/>
-        <div className="field-full"><FT label="出店内容・販売予定商品" value={form.content} onChange={v=>set("content",v)} ph="例：ベトナム料理（フォー・バインミー・生春巻き）の販売"/></div>
+        <div className="field-full"><FT label="出店内容・販売予定商品" value={form.content} onChange={v=>set("content",v)} ph="例：ベトナム料理（フォー・バインミー・揚げ春巻き）の販売"/></div>
         <div className="field-full"><FT label="備考・質問（任意）" value={form.note} onChange={v=>set("note",v)} ph="設備に関する質問など"/></div>
       </div>
       <button className="submit-btn" onClick={submit} disabled={sending}>
