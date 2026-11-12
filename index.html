@@ -789,7 +789,7 @@ function AdminPage({vols,booths,msgs,tags,adminOk,setAdminOk,adminTab,setAdminTa
       </div>
     </div>
   );
-  const tabs=[{id:"dashboard",label:"ダッシュボード"},{id:"vols",label:`ボランティア (${vols.length})`},{id:"booths",label:`出店申込 (${booths.length})`},{id:"bulk",label:"一括連絡"},{id:"tagmgmt",label:"🏷 タグ管理"}];
+  const tabs=[{id:"dashboard",label:"ダッシュボード"},{id:"booths",label:`出店申込 (${booths.length})`},{id:"bulk",label:"一括連絡"},{id:"tagmgmt",label:"🏷 タグ管理"}];
   return(
     <div style={{background:"var(--off)",minHeight:"calc(100vh - 56px)",paddingTop:"56px"}}>
       <div className="admin-wrap">
@@ -798,8 +798,7 @@ function AdminPage({vols,booths,msgs,tags,adminOk,setAdminOk,adminTab,setAdminTa
           <div className="admin-tabs">
             {tabs.map(t=><button key={t.id} className={`admin-tab ${adminTab===t.id?"active":""}`} onClick={()=>{setAdminTab(t.id);setSel(null);}}>{t.label}</button>)}
           </div>
-          {adminTab==="dashboard"&&<ADashboard vols={vols} booths={booths} tags={tags}/>}
-          {adminTab==="vols"     &&<AEntries entries={vols} msgs={msgs} tags={tags} sel={sel} setSel={setSel} statusMap={V_STATUS} changeStatus={(id,s)=>changeStatus(id,s,"vol")} toggleTag={(id,tl)=>toggleTag(id,tl,"vol")} sendMsg={sendMsg} type="vol" labelMap={VOL_ROLES} catKey="role"/>}
+          {adminTab==="dashboard"&&<ADashboard booths={booths} tags={tags}/>}
           {adminTab==="booths"   &&<AEntries entries={booths} msgs={msgs} tags={tags} sel={sel} setSel={setSel} statusMap={B_STATUS} changeStatus={(id,s)=>changeStatus(id,s,"booth")} toggleTag={(id,tl)=>toggleTag(id,tl,"booth")} sendMsg={sendMsg} type="booth" labelMap={BOOTH_CATS} catKey="cat"/>}
           {adminTab==="bulk"     &&<ABulk vols={vols} booths={booths} tags={tags} sendBulk={sendBulk}/>}
           {adminTab==="tagmgmt"  &&<ATagMgmt tags={tags} createTag={createTag} deleteTag={deleteTag} vols={vols} booths={booths}/>}
@@ -809,21 +808,11 @@ function AdminPage({vols,booths,msgs,tags,adminOk,setAdminOk,adminTab,setAdminTa
   );
 }
 
-function ADashboard({vols,booths,tags}){
-  const vc=s=>vols.filter(a=>a.status===s).length;
+function ADashboard({booths,tags}){
   const bc=s=>booths.filter(a=>a.status===s).length;
-  const tc=l=>[...vols,...booths].filter(a=>a.tags&&a.tags.includes(l)).length;
+  const tc=l=>booths.filter(a=>a.tags&&a.tags.includes(l)).length;
   return(
     <div>
-      <div style={{color:"var(--muted)",fontSize:11,fontWeight:800,letterSpacing:"0.12em",marginBottom:10}}>VOLUNTEER</div>
-      <div className="stat-grid" style={{marginBottom:20}}>
-        {[{l:"総応募",v:vols.length,c:"#DA251D"},{l:"審査中",v:vc("pending"),c:"#D97706"},{l:"確定",v:vc("confirmed"),c:"#059669"},{l:"補欠",v:vc("waitlist"),c:"#7C3AED"},{l:"不採用",v:vc("rejected"),c:"#DC2626"}].map(s=>(
-          <div key={s.l} className="stat-card"><div className="stat-num" style={{color:s.c}}>{s.v}</div><div className="stat-label">{s.l}</div></div>
-        ))}
-      </div>
-      <div style={{background:"#fff",border:"1px solid var(--border)",borderRadius:10,overflow:"hidden",marginBottom:24,boxShadow:"0 2px 6px rgba(0,0,0,0.05)"}}>
-        {VOL_ROLES.map((r,i)=>{const conf=vols.filter(a=>a.role===r.id&&a.status==="confirmed").length;const tot=vols.filter(a=>a.role===r.id).length;const pct=(conf/r.slots)*100;return(<div key={r.id} style={{padding:"12px 18px",borderBottom:i<VOL_ROLES.length-1?"1px solid var(--border)":"none"}}><div style={{display:"flex",justifyContent:"space-between",marginBottom:6,fontSize:12}}><span>{r.icon} {r.label}</span><span style={{color:"var(--sub)"}}>確定 <strong style={{color:"#059669"}}>{conf}</strong>/{r.slots}名 <span style={{marginLeft:8,color:"var(--muted)"}}>応募{tot}</span></span></div><div style={{background:"var(--gray)",borderRadius:3,height:4,overflow:"hidden"}}><div style={{width:`${Math.min(pct,100)}%`,height:"100%",background:pct>=100?"#059669":"var(--red)",borderRadius:3}}/></div></div>);})}
-      </div>
       <div style={{color:"var(--muted)",fontSize:11,fontWeight:800,letterSpacing:"0.12em",marginBottom:10}}>BOOTHS</div>
       <div className="stat-grid" style={{marginBottom:20}}>
         {[{l:"総申込",v:booths.length,c:"#B87A00"},{l:"確認中",v:bc("pending"),c:"#D97706"},{l:"承認",v:bc("confirmed"),c:"#059669"},{l:"補欠",v:bc("waitlist"),c:"#7C3AED"}].map(s=>(
@@ -951,13 +940,12 @@ function AEntries({entries,msgs,tags,sel,setSel,statusMap,changeStatus,toggleTag
 }
 
 function ABulk({vols,booths,tags,sendBulk}){
-  const [entType,setEntType]=useState("vol");
   const [mode,setMode]=useState("status");
   const [target,setTarget]=useState("pending");
   const [tagTarget,setTagTarget]=useState("");
   const [text,setText]=useState("");const [tmpl,setTmpl]=useState("");
-  const list=entType==="vol"?vols:booths;
-  const smap=entType==="vol"?V_STATUS:B_STATUS;
+  const list=booths;
+  const smap=B_STATUS;
   const targets=mode==="status"?list.filter(a=>target==="all"||a.status===target):tagTarget?list.filter(a=>(a.tags||[]).includes(tagTarget)):[];
   const doSend=async(dest)=>{
     if(dest==="slack"){
@@ -975,10 +963,6 @@ function ABulk({vols,booths,tags,sendBulk}){
     <div style={{maxWidth:580}}>
       <div style={{color:"var(--muted)",fontSize:11,fontWeight:800,letterSpacing:"0.14em",marginBottom:14}}>一括メッセージ送信</div>
       <div className="bulk-card">
-        <div style={{marginBottom:18}}>
-          <div style={{color:"var(--sub)",fontSize:12,fontWeight:700,marginBottom:10}}>送信リスト</div>
-          <div style={{display:"flex",gap:7}}>{[{v:"vol",l:"ボランティア"},{v:"booth",l:"出店申込"}].map(o=><button key={o.v} onClick={()=>{setEntType(o.v);setTarget("pending");setTagTarget("");}} style={btnStyle(entType===o.v)}>{o.l}</button>)}</div>
-        </div>
         <div style={{marginBottom:18}}>
           <div style={{color:"var(--sub)",fontSize:12,fontWeight:700,marginBottom:10}}>絞り込み</div>
           <div style={{display:"flex",gap:7,marginBottom:12}}>
