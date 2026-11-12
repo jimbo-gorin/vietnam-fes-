@@ -593,9 +593,6 @@ function PublicPage({vols,booths,addVol,addBooth,notify}){
           <Countdown/>
           <div className="hero-btns">
             <button className="btn-primary" onClick={()=>document.getElementById("form-section")?.scrollIntoView({behavior:"smooth"})}>
-              ボランティア応募 →
-            </button>
-            <button className="btn-outline" onClick={()=>{document.getElementById("form-section")?.scrollIntoView({behavior:"smooth"}); setTimeout(()=>document.querySelector('[data-tab="booth"]')?.click(),400);}}>
               出店申込 →
             </button>
           </div>
@@ -603,32 +600,6 @@ function PublicPage({vols,booths,addVol,addBooth,notify}){
         <div className="scroll-hint">
           <div className="scroll-arrow"/>
           <span>SCROLL</span>
-        </div>
-      </section>
-
-      {/* VOLUNTEER ROLES */}
-      <section className="section" style={{background:"#fff"}}>
-        <div className="section-inner">
-          <div className="section-label">Volunteer</div>
-          <h2 className="section-title">一緒にフェスを<br/><span>つくりあげよう</span></h2>
-          <p className="section-desc">当日の運営サポートだけでなく、事前準備・広報・企画補助まで。イベントづくりの中心として関わる大切な役割です。</p>
-          <div className="roles-grid">
-            {VOL_ROLES.map(r=>{
-              const rem=r.slots-confFor(r.id);const full=rem<=0;
-              return(
-                <div key={r.id} className="role-card">
-                  <div className="role-card-bg" style={{background:`linear-gradient(135deg,#6B0F0F,#DA251D)`}}/>
-                  <div className="role-card-overlay"/>
-                  <div className={`role-card-slots ${full?"full":""}`}>{full?"FULL":`残り${rem}名`}</div>
-                  <div className="role-card-content">
-                    <div className="role-card-icon">{r.icon}</div>
-                    <div className="role-card-title">{r.label}</div>
-                    <div className="role-card-desc">{r.desc}</div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
         </div>
       </section>
 
@@ -663,11 +634,7 @@ function PublicPage({vols,booths,addVol,addBooth,notify}){
             <div style={{display:"inline-block",background:"var(--yellow)",color:"var(--black)",padding:"4px 14px",fontSize:10,fontWeight:900,letterSpacing:"0.2em",textTransform:"uppercase",marginBottom:16}}>APPLY NOW</div>
             <h2 style={{fontSize:"clamp(24px,4vw,36px)",fontWeight:900,color:"#fff",letterSpacing:"-0.02em"}}>参加申込</h2>
           </div>
-          <div className="form-tabs">
-            <button className={`form-tab ${formTab==="vol"?"active":""}`} onClick={()=>setFormTab("vol")}>👥 ボランティア応募</button>
-            <button data-tab="booth" className={`form-tab ${formTab==="booth"?"active":""}`} onClick={()=>setFormTab("booth")}>🏪 出店ブース申込</button>
-          </div>
-          {formTab==="vol"?<VolForm addVol={addVol} notify={notify}/>:<BoothForm addBooth={addBooth} notify={notify}/>}
+          <BoothForm addBooth={addBooth} notify={notify}/>
         </div>
       </section>
 
