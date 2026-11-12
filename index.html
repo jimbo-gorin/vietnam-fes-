@@ -638,6 +638,7 @@ function PublicPage({vols,booths,addVol,addBooth,notify}){
           <div className="section-label">Booth</div>
           <h2 className="section-title">出店者<span>募集中</span></h2>
           <p className="section-desc">ベトナムに関する飲食・物販・企業PRブースを募集しています。申込締切：2027年1月31日（日）</p>
+          <p style={{fontSize:12,color:"rgba(255,255,255,0.5)",margin:"-8px 0 12px",textAlign:"right"}}>※出店料は2日間・税込</p>
           <div className="booth-grid">
             {BOOTH_CATS.map(c=>{
               const rem=boothRem(c.id);const full=rem<=0;
@@ -769,7 +770,7 @@ function BoothForm({addBooth,notify}){
         <FF label="携帯番号 *" value={form.phone} onChange={v=>set("phone",v)} ph="090-0000-0000"/>
         <div className="field-full"><FF label="メールアドレス *" value={form.email} onChange={v=>set("email",v)} ph="email@example.com" type="email"/></div>
         <div className="field-full"><FF label="住所 *" value={form.address} onChange={v=>set("address",v)} ph="〒000-0000 愛知県名古屋市○○区○○町0-0-0"/></div>
-        <div className="field-full"><FS label="出店カテゴリ *" value={form.cat} onChange={v=>set("cat",v)} opts={BOOTH_CATS.map(c=>({v:c.id,l:`${c.label}（¥${c.price.toLocaleString()}）`}))}/></div>
+        <div className="field-full"><FS label="出店カテゴリ *" value={form.cat} onChange={v=>set("cat",v)} opts={BOOTH_CATS.map(c=>({v:c.id,l:`${c.label}（¥${c.price.toLocaleString()}）`}))}/><p style={{fontSize:11,color:"rgba(255,255,255,0.45)",margin:"4px 0 0",paddingLeft:2}}>※出店料は2日間・税込</p></div>
         <FS label="希望ブース数 *" value={form.quantity} onChange={v=>set("quantity",v)} opts={[{v:"1",l:"1ブース"},{v:"2",l:"2ブース"},{v:"3",l:"3ブース"},{v:"4",l:"4ブース"},{v:"5",l:"5ブース"}]}/>
         <div className="field-full"><FT label="出店内容・販売予定商品" value={form.content} onChange={v=>set("content",v)} ph="例：ベトナム料理（フォー・バインミー・揚げ春巻き）の販売"/></div>
         <div className="field-full"><FT label="備考・質問（任意）" value={form.note} onChange={v=>set("note",v)} ph="設備に関する質問など"/></div>
